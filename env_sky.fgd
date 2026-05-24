@@ -1,0 +1,6 @@
+@PointClass base(Targetname, Angles) iconsprite("editor/env_sky.vmt") = env_sky : 
+	"An entity used to control procedural sky."
+[
+	staticskytexpath(material) : "Static Sky Texture" : "sky/sky_day01_sphere" : "Set static sky texture which will be shown if static mode enabled."
+	brightness(float) : "Sky Brightness Scale" : "1.0" : "Defines how bright the sky is."
+]
