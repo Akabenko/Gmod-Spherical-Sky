@@ -7,4 +7,5 @@ Params of `env_sky`:
 - Sky Brightness Scale (`brightness`) — Defines how bright the sky is.
 
 Links:
+- [Military Conflict: Vietnam](https://store.steampowered.com/app/1012110/Military_Conflict_Vietnam/)
 - [Enhancing the looks of Source™ Engine in Military Conflict: Vietnam by Dmitriy Andreev](https://www.dmitrex.com/publications/Enhancing%20the%20looks%20of%20Source%20Engine%20in%20Military%20Conflict%20Vietnam.pdf)
