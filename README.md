@@ -6,6 +6,9 @@ Params of `env_sky`:
 - Static Sky Textue (`staticskytexpath`) — Set static sky texture which will be shown if static mode enabled.
 - Sky Brightness Scale (`brightness`) — Defines how bright the sky is.
 
+UV calculations taken from Dmitrex white paper. 
+Icon of `env_sky` taken from Military Conflict: Vietnam game.
+
 Links:
 - [Military Conflict: Vietnam](https://store.steampowered.com/app/1012110/Military_Conflict_Vietnam/)
 - [Enhancing the looks of Source™ Engine in Military Conflict: Vietnam by Dmitriy Andreev](https://www.dmitrex.com/publications/Enhancing%20the%20looks%20of%20Source%20Engine%20in%20Military%20Conflict%20Vietnam.pdf)
