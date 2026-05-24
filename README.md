@@ -5,6 +5,19 @@ Place `env_sky.fgd` to `Garrysmod/bin/`. Then goto Hammer++, `Tools` -> `Options
 Params of `env_sky`:
 - Static Sky Textue (`staticskytexpath`) — Set static sky texture which will be shown if static mode enabled.
 - Sky Brightness Scale (`brightness`) — Defines how bright the sky is.
+
+### Spherical sky for Addon creators
+You can add your sky texture to this addon, using cofig hook:
+
+```lua
+hook.Add("ConfigSphericalSky", "MySkyConfig", function()
+	return {
+		"sky/qwantani_dusk_2_puresky_4k";
+		-- add your name skybox here
+	}
+end)
+```
+
 ***
 Addon link to workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3731958150
 Supported sky textures addons/games:
