@@ -148,27 +148,17 @@ local t00_10    = {0,0,-1,0}
 local t0001     = {0,0, 0,1}
 local t0011     = {0,0, 1,1}
 
-local function GetViewMatrix(pos, ang)
+local function GetViewMatrix(ang)
     local D = -ang:Forward()
     local R = ang:Right()
     local U = -ang:Up()
-    local P = -pos
-
+    
     local mFirst = Matrix({
         {R.x,   R.y,    R.z,    0},
         {U.x,   U.y,    U.z,    0},
         {D.x,   D.y,    D.z,    0},
         t0001,
     })
-
-    local mSecond = Matrix({
-        {1,     0,      0,      P.x},
-        {0,     1,      0,      P.y},
-        {0,     0,      1,      P.z},
-        t0001,
-    })
-
-    mFirst:Mul(mSecond)
 
     return mFirst
 end
@@ -190,7 +180,7 @@ end
 
 local function GetViewProjMatrix(viewSetup)
     local pos, ang = viewSetup.origin, viewSetup.angles
-    local mView = GetViewMatrix(pos, ang)
+    local mView = GetViewMatrix(ang)
 
     local mProj = GetProjMatrix(viewSetup)
     mProj:Mul(mView)
@@ -203,7 +193,6 @@ local function InitSphereSky()
         local viewSetup = render.GetViewSetup()
         if !util.IsSkyboxVisibleFromPoint( viewSetup.origin ) then return end
 
-        viewSetup.origin = vector_origin
         viewSetup.angles = EyeAngles() -- _rt_waterreflection adaptation
 
         local aspect = viewSetup.aspect
