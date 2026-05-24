@@ -6,6 +6,8 @@ Params of `env_sky`:
 - Static Sky Textue (`staticskytexpath`) — Set static sky texture which will be shown if static mode enabled.
 - Sky Brightness Scale (`brightness`) — Defines how bright the sky is.
 ***
+Addon link to workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3731958150
+***
 UV calculations taken from Dmitrex white paper. 
 Icon of `env_sky` taken from Military Conflict: Vietnam game, as a few params of this entity.
 
