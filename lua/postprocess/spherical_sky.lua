@@ -77,7 +77,7 @@ local function SetSkyMaterial(texture, brightness)
     if !brightness then brightness = r_sky_spherical_brightness:GetFloat() end
 
     local ref_mat = Material(texture)
-    if ref_mat:IsError() or !ref_mat then
+    if !ref_mat or ref_mat:IsError() then
         ref_mat = Material(sky_textures[1])
     end
 
