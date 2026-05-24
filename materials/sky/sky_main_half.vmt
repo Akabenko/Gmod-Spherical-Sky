@@ -3,7 +3,7 @@ screenspace_general
 	$pixshader 		"sky_spherical_half_ps30"
 	$vertexshader 	"sky_spherical_vs30"
 	
-	$basetexture 		"sky/qwantani_dusk_2_puresky_4k"
+	//$basetexture 		"sky/qwantani_dusk_2_puresky_4k"
 	$c0_x 1
 	$ignorez 		1
 	$model 		1
