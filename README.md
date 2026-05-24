@@ -7,6 +7,11 @@ Params of `env_sky`:
 - Sky Brightness Scale (`brightness`) — Defines how bright the sky is.
 ***
 Addon link to workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3731958150
+Supported sky textures addons/games:
+- [Military Conflict: Vietnam](https://store.steampowered.com/app/1012110/Military_Conflict_Vietnam/)
+- [DOOM 2016 Skydome](https://steamcommunity.com/sharedfiles/filedetails/?id=1572289906&searchtext=doom+2016+sky)
+- [BF1 Skydomes](https://steamcommunity.com/sharedfiles/filedetails/?id=2392795426)
+- [Infinite Stratos Skydome (Prop)](https://steamcommunity.com/sharedfiles/filedetails/?id=2924967056)
 ***
 UV calculations taken from Dmitrex white paper. 
 Icon of `env_sky` taken from Military Conflict: Vietnam game, as a few params of this entity.
