@@ -7,7 +7,7 @@ Params of `env_sky`:
 - Sky Brightness Scale (`brightness`) — Defines how bright the sky is.
 
 ### Spherical sky for Addon creators
-You can add your sky texture to this addon, using cofig hook:
+You can add your sky texture to this addon, using config hook:
 
 ```lua
 hook.Add("ConfigSphericalSky", "MySkyConfig", function()
