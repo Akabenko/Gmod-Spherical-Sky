@@ -19,8 +19,8 @@ end)
 ```
 
 ### Config your Sphere sky texture
-Use a texture flags: **Clamp T**, **Clamp S**, **No MipMaps**, **No lod**. 
-Save Sky texture as RGB888 or RGBA16161616/RGBA16161616F texture. Not use DXT1 or DXT5 for sky texture. This cause banding.
+Use a texture flags: **Clamp T**, **Clamp S**, **No MipMaps**, **No lod**.<br>
+Save Sky texture as RGB888 or RGBA16161616/RGBA16161616F texture. Not use DXT1 or DXT5 for sky texture. This cause banding.<br>
 You can save HDR textures on Source, using [MareTF VTF Editor](https://github.com/craftablescience/MareTF).
 
 ### Addon features
