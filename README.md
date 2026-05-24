@@ -18,6 +18,15 @@ hook.Add("ConfigSphericalSky", "MySkyConfig", function()
 end)
 ```
 
+### Config your Sphere sky texture
+Use Clamp T, Clamp S, No MipMaps, No lod flags. 
+Save Sky texture as RGB888 or RGBA16161616/RGBA16161616F texture. Not use DXT1 or DXT5 for sky texture. This cause banding.
+You can save HDR textures on Source, using [MareTF VTF Editor](https://github.com/craftablescience/MareTF).
+
+### Addon features
+- Both full size sphere support and half size skydome auto support.
+- Water reflection support.
+
 ***
 Addon link to workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=3731958150
 <br>Supported sky textures addons/games:
