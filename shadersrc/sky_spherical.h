@@ -39,7 +39,7 @@ float4 main( PS_INPUT i ) : COLOR
     #endif
     
     float3 sky = tex2D( SkyTexture, uv ).rgb * brightness * LINEAR_LIGHT_SCALE; // HDR_INPUT_MAP_SCALE
-    return half4(sky, 1);
+    return float4(sky, 1);
 }
 
 // https://www.dmitrex.com/publications/Enhancing%20the%20looks%20of%20Source%20Engine%20in%20Military%20Conflict%20Vietnam.pdf
