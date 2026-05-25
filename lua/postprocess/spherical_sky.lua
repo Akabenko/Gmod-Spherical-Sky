@@ -80,7 +80,7 @@ local function SetSkyMaterial(texture, brightness)
     if !ref_mat or ref_mat:IsError() then
         ref_mat = Material(sky_textures[1])
     end
-
+    
     -- нужно определять формат текстуры чтением HEX через file
     local aspect = ref_mat:Height() / ref_mat:Width()
     -- 0.25 half spherical sky
@@ -148,17 +148,27 @@ local t00_10    = {0,0,-1,0}
 local t0001     = {0,0, 0,1}
 local t0011     = {0,0, 1,1}
 
-local function GetViewMatrix(ang)
+local function GetViewMatrix(pos, ang)
     local D = -ang:Forward()
     local R = ang:Right()
     local U = -ang:Up()
-    
+    local P = -pos
+
     local mFirst = Matrix({
         {R.x,   R.y,    R.z,    0},
         {U.x,   U.y,    U.z,    0},
         {D.x,   D.y,    D.z,    0},
         t0001,
     })
+
+    local mSecond = Matrix({
+        {1,     0,      0,      P.x},
+        {0,     1,      0,      P.y},
+        {0,     0,      1,      P.z},
+        t0001,
+    })
+
+    mFirst:Mul(mSecond)
 
     return mFirst
 end
@@ -180,7 +190,7 @@ end
 
 local function GetViewProjMatrix(viewSetup)
     local pos, ang = viewSetup.origin, viewSetup.angles
-    local mView = GetViewMatrix(ang)
+    local mView = GetViewMatrix(pos, ang)
 
     local mProj = GetProjMatrix(viewSetup)
     mProj:Mul(mView)
@@ -193,6 +203,7 @@ local function InitSphereSky()
         local viewSetup = render.GetViewSetup()
         if !util.IsSkyboxVisibleFromPoint( viewSetup.origin ) then return end
 
+        viewSetup.origin = vector_origin
         viewSetup.angles = EyeAngles() -- _rt_waterreflection adaptation
 
         local aspect = viewSetup.aspect
@@ -238,8 +249,6 @@ cvars.AddChangeCallback( r_sky_spherical_brightness:GetName(), function( convar_
     mat_half:SetFloat("$c0_x", identifier)
 end, shaderName )
 
-SetSkyMaterial( r_sky_spherical_tex:GetString(), r_sky_spherical_brightness:GetFloat() )
-
 hook.Add("InitPostEntity", shaderName, function()
     -- Hammer entity support
     ENV_SKY = ents.FindByClass("env_sky")[1] or ents.FindByClass("env_atmosphere")[1]
@@ -256,6 +265,7 @@ hook.Add("InitPostEntity", shaderName, function()
     end
     
     if !r_sky_spherical:GetBool() then return end
+    SetSkyMaterial( r_sky_spherical_tex:GetString(), r_sky_spherical_brightness:GetFloat() )
     InitSphereSky()
 end)
 
