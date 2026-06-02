@@ -31,11 +31,12 @@ float4 main( PS_INPUT i ) : COLOR
 
     viewDirection = normalize(viewDirection);
 
-    float2 uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( viewDirection.z ) * INV_PI );
+    float2 uv;
 
     #if defined(MIRROR_SKY)
-        uv.y = 1.0 - abs(uv.y * 2.0 - 1.0);
-        uv.y = min(0.999, uv.y);
+        uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( max( abs( rotatedViewDir.z ), 0.001f ) ) * INV_PI2 );
+    #else
+        uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( viewDirection.z ) * INV_PI );
     #endif
     
     float3 sky = tex2D( SkyTexture, uv ).rgb * brightness * LINEAR_LIGHT_SCALE; // HDR_INPUT_MAP_SCALE
