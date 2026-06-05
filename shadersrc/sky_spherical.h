@@ -34,7 +34,7 @@ float4 main( PS_INPUT i ) : COLOR
     float2 uv;
 
     #if defined(MIRROR_SKY)
-        uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( max( abs( rotatedViewDir.z ), 0.001f ) ) * INV_PI2 );
+        uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( max( abs( viewDirection.z ), 0.001f ) ) * INV_PI2 );
     #else
         uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( viewDirection.z ) * INV_PI );
     #endif
