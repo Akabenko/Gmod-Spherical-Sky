@@ -1,6 +1,12 @@
 #include "common_ps_fxc.h"
 
+#if defined(DX11)
+Texture2D       SkySampler      : register(t0);
+SamplerState    SkyTexture      : register(s0);
+#else
 sampler2D SkyTexture            : register(s0);
+#endif
+
 const float4 Constants0         : register(c0);
 #define brightness      Constants0.x
 const float4x4 matInvProjViewrot      : register(c11);
@@ -11,14 +17,22 @@ static const float INV_PI   = 1 / PI;
 static const float INV_PI2  = 1 / PI2;
 
 struct PS_INPUT {
+    #if defined(DX11)
+    float4 P            : SV_Position;
+    #else
     float2 P            : VPOS;
+    #endif
     float2 uv           : TEXCOORD0;
 };
 
+#if defined(DX11)
+float4 main( PS_INPUT i ) : SV_Target
+#else
 float4 main( PS_INPUT i ) : COLOR
+#endif
 {
     float2 texCoord = i.uv;
-
+    
     float4 cameraRay = float4(texCoord * 2.0f - 1.0f, 1.0f, 1.0f);
 
     float4 viewPos = mul(cameraRay, matInvProjViewrot);
@@ -39,8 +53,15 @@ float4 main( PS_INPUT i ) : COLOR
         uv = float2( atan2( -viewDirection.x, viewDirection.y ) * INV_PI2 + 0.5f, acos( viewDirection.z ) * INV_PI );
     #endif
 
-    float3 sky = tex2D( SkyTexture, uv ).rgb * brightness * LINEAR_LIGHT_SCALE; // HDR_INPUT_MAP_SCALE
-    return float4(sky, 1);
+    #if defined(DX11)
+    float4 sky = SkySampler.SampleLevel(SkyTexture, uv, 0);
+    #else
+    float4 sky = tex2Dlod( SkyTexture, float4(uv,0,0) );
+    #endif
+    
+    sky.rgb = sky.rgb * brightness * LINEAR_LIGHT_SCALE; // HDR_INPUT_MAP_SCALE
+
+    return sky;
 }
 
 // https://www.dmitrex.com/publications/Enhancing%20the%20looks%20of%20Source%20Engine%20in%20Military%20Conflict%20Vietnam.pdf
