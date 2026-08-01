@@ -5,8 +5,11 @@ local r_sky_spherical               = CreateClientConVar( "r_sky_spherical", "0"
 local r_sky_spherical_adaptation    = CreateClientConVar( "r_sky_spherical_adaptation", "1", true, false, "Enable Spherical Sky only if map.", 0, 1 )
 local r_sky_spherical_brightness    = CreateClientConVar( "r_sky_spherical_brightness", "1", true, false, "Spherical Sky brightness.", 0, 16 )
 
-local mat_full = Material("sky/sky_main_full")
-local mat_half = Material("sky/sky_main_half")
+local dxlevel = render.GetDXLevel()
+local dx11 = dxlevel >= 110 and dxlevel <= 114
+
+local mat_full = Material(dx11 and "sky/sky_main_full_dx11" or "sky/sky_main_full")
+local mat_half = Material(dx11 and "sky/sky_main_half_dx11" or "sky/sky_main_half")
 
 local sky_textures = {} -- use ConfigSphericalSky hook to add sky to this table. Check spherical_sky_config.lua
 for name_hook, func in pairs(hook.GetTable()["ConfigSphericalSky"] or {}) do
@@ -67,6 +70,8 @@ if IsMounted("vietnam") then -- Military Conflict: Vietnam https://store.steampo
     sky_textures[#sky_textures + 1] = "sky/stars" -- текстура в MCV, материал в аддоне
 end
 
+if !sky_textures[1] then return end -- no sky textures
+
 local half_sky = false
 
 local function GetSkyMaterial()
@@ -86,14 +91,17 @@ local function SetSkyMaterial(texture, brightness)
     -- 0.25 half spherical sky
     -- 0.5  full size spherical sky
     -- переопределяем материал
+    
+    half_sky = aspect == 0.25 or ref_mat:GetInt("$halfsphere", 0) == 1
 
-    half_sky = aspect == 0.25
     mat_half:SetFloat("$c0_x", brightness)
     mat_full:SetFloat("$c0_x", brightness)
 
     local basetexture   = ref_mat:GetTexture("$basetexture")
     mat_half:SetTexture("$basetexture", basetexture)
     mat_full:SetTexture("$basetexture", basetexture)
+
+
 end
 
 list.Set( "PostProcess", "#r_sky_spherical.name", {
@@ -148,27 +156,17 @@ local t00_10    = {0,0,-1,0}
 local t0001     = {0,0, 0,1}
 local t0011     = {0,0, 1,1}
 
-local function GetViewMatrix(pos, ang)
+local function GetViewMatrix(ang)
     local D = -ang:Forward()
     local R = ang:Right()
     local U = -ang:Up()
-    local P = -pos
-
+    
     local mFirst = Matrix({
         {R.x,   R.y,    R.z,    0},
         {U.x,   U.y,    U.z,    0},
         {D.x,   D.y,    D.z,    0},
         t0001,
     })
-
-    local mSecond = Matrix({
-        {1,     0,      0,      P.x},
-        {0,     1,      0,      P.y},
-        {0,     0,      1,      P.z},
-        t0001,
-    })
-
-    mFirst:Mul(mSecond)
 
     return mFirst
 end
@@ -190,7 +188,15 @@ end
 
 local function GetViewProjMatrix(viewSetup)
     local pos, ang = viewSetup.origin, viewSetup.angles
-    local mView = GetViewMatrix(pos, ang)
+    local mView = GetViewMatrix(ang)
+
+    if cam.GetProjectionMatrix then -- dev branch
+        cam.Start3D()
+            local mProj = cam.GetProjectionMatrix()
+            mProj:Mul(mView)
+        cam.End3D()
+        return mProj
+    end
 
     local mProj = GetProjMatrix(viewSetup)
     mProj:Mul(mView)
@@ -210,6 +216,11 @@ local function InitSphereSky()
 
         local mat = GetSkyMaterial()
         local ViewProj = GetViewProjMatrix(viewSetup):GetInverse()
+
+        if dx11 then -- почему то матрица на DX11 не транспорируется
+            ViewProj = ViewProj:GetTransposed()
+        end
+
         mat:SetMatrix("$viewprojmat", ViewProj)
 
         render.SetMaterial( mat )
@@ -268,4 +279,3 @@ hook.Add("InitPostEntity", shaderName, function()
     SetSkyMaterial( r_sky_spherical_tex:GetString(), r_sky_spherical_brightness:GetFloat() )
     InitSphereSky()
 end)
-
