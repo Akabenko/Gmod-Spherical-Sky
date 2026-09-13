@@ -217,10 +217,6 @@ local function InitSphereSky()
         local mat = GetSkyMaterial()
         local ViewProj = GetViewProjMatrix(viewSetup):GetInverse()
 
-        if dx11 then -- почему то матрица на DX11 не транспорируется
-            ViewProj = ViewProj:GetTransposed()
-        end
-
         mat:SetMatrix("$viewprojmat", ViewProj)
 
         render.SetMaterial( mat )
@@ -262,20 +258,23 @@ end, shaderName )
 
 hook.Add("InitPostEntity", shaderName, function()
     -- Hammer entity support
-    ENV_SKY = ents.FindByClass("env_sky")[1] or ents.FindByClass("env_atmosphere")[1]
-    -- env_sky is a DX9 entity of MC:V, env_atmosphere will be a new entity of MC:V on DX11
-    if IsValid(ENV_SKY) then
-        ENV_SKY_MAT = ENV_SKY:GetNWString("staticskytexpath")
-        ENV_SKY_BRIGNTNESS = ENV_SKY:GetNWFloat("brightness", 1)
-        SetSkyMaterial( ENV_SKY_MAT, ENV_SKY_BRIGNTNESS )
+    timer.Simple(1, function()
+        ENV_SKY = ents.FindByClass("env_sky")[1] or ents.FindByClass("env_atmosphere")[1]
+        -- env_sky is a DX9 entity of MC:V, env_atmosphere will be a new entity of MC:V on DX11
+        if IsValid(ENV_SKY) then
+            ENV_SKY_MAT = ENV_SKY:GetNWString("staticskytexpath")
+            ENV_SKY_BRIGNTNESS = ENV_SKY:GetNWFloat("brightness", 1)
+            SetSkyMaterial( ENV_SKY_MAT, ENV_SKY_BRIGNTNESS )
 
-        if r_sky_spherical_adaptation:GetBool() then
-            InitSphereSky()
+            if r_sky_spherical_adaptation:GetBool() then
+                InitSphereSky()
+            end
+            return
         end
-        return
-    end
-    
-    if !r_sky_spherical:GetBool() then return end
-    SetSkyMaterial( r_sky_spherical_tex:GetString(), r_sky_spherical_brightness:GetFloat() )
-    InitSphereSky()
+        
+        if !r_sky_spherical:GetBool() then return end
+        SetSkyMaterial( r_sky_spherical_tex:GetString(), r_sky_spherical_brightness:GetFloat() )
+        InitSphereSky()
+    end)
 end)
+
